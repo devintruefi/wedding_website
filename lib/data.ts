@@ -17,10 +17,13 @@ interface RawRow {
 }
 
 function normalizeSide(s: string): Side {
-  const t = (s || "").trim();
-  if (t === "Devin") return "Devin";
-  if (t === "Poonam") return "Poonam";
-  if (t === "Joint") return "Joint";
+  // Lenient match — accepts "Devin", "Poonam", "Joint", and longer forms like
+  // "Joint (bride and groom)" or "Devin's side". Anything else (incl. "TBD"
+  // or "Open") falls through.
+  const t = (s || "").trim().toLowerCase();
+  if (t.startsWith("devin")) return "Devin";
+  if (t.startsWith("poonam")) return "Poonam";
+  if (t.startsWith("joint")) return "Joint";
   return "TBD";
 }
 
