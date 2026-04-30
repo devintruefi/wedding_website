@@ -2,7 +2,7 @@ import Papa from "papaparse";
 import type { Room, Side } from "./types";
 
 export const CSV_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSzmuqNOu228i8lo_buxlcJfoQ-JGvAj_MtF0A2TbjXMzs6lKvV13jXBViaHIBW9EpxRDAXbxp16_O2/pub?gid=1193588901&single=true&output=csv";
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vTX-iQl3OJbbC6EcspKPfsvqV7syVLJMwvLr8o_l5fnLoxnTbP2K7onQuB7O2v77PhPjZ88BF7b9HKx/pub?gid=980928746&single=true&output=csv";
 
 interface RawRow {
   Building: string;
