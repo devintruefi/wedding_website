@@ -1,19 +1,26 @@
 import { fetchRooms } from "@/lib/data";
 import { Hero } from "@/components/Hero";
 import { Footer } from "@/components/Footer";
+import { ErrorState } from "@/components/States";
+import { SIDE_ACCENT } from "@/lib/sides";
 import type { Room } from "@/lib/types";
 
 export const revalidate = 60;
 
-const SIDE_ACCENT: Record<string, string> = {
-  Devin: "#3E5C76",
-  Poonam: "#A8527A",
-  Joint: "#C9A040",
-  TBD: "#8A8273",
-};
-
 export default async function ByGroupPage() {
-  const rooms = await fetchRooms();
+  let rooms: Room[];
+  try {
+    rooms = await fetchRooms();
+  } catch (e) {
+    return (
+      <>
+        <Hero />
+        <ErrorState message={(e as Error).message} />
+        <Footer />
+      </>
+    );
+  }
+
   const groups = new Map<string, Room[]>();
   for (const r of rooms) {
     const key = r.group || "—";
@@ -29,16 +36,22 @@ export default async function ByGroupPage() {
     <>
       <Hero />
       <main className="mx-auto max-w-5xl px-6 py-16">
-        <header className="mb-12 text-center">
-          <p className="font-sans text-[0.6rem] tracking-ultra-wide uppercase text-copper mb-2">
+        <header className="mb-12 text-center reveal">
+          <p className="font-sans text-[0.6rem] tracking-mega-wide uppercase text-copper mb-2">
             ✦ View by group
           </p>
-          <h1 className="font-serif text-4xl font-light text-forest-deep">
+          <h1 className="font-serif text-4xl sm:text-5xl font-light text-forest-deep">
             Guests by Group
           </h1>
-          <p className="mt-3 font-sans text-sm text-slate-warm">
-            Grouped by the "Group" column rather than physical room.
+          <p className="mt-3 font-sans text-sm text-slate-warm/90">
+            Grouped by the &ldquo;Group&rdquo; column rather than physical room.
           </p>
+          <a
+            href="/"
+            className="mt-6 inline-block rounded-full border border-taupe/60 bg-cream-bright px-4 py-1.5 font-sans text-[0.65rem] tracking-ultra-wide uppercase text-slate-warm hover:border-forest-deep/50 hover:text-forest-deep transition-colors"
+          >
+            ← Back to resort map
+          </a>
         </header>
 
         {sortedGroups.map(([group, list]) => (
@@ -53,7 +66,7 @@ export default async function ByGroupPage() {
               {list.map((r) => (
                 <div
                   key={r.room}
-                  className="rounded-md border border-taupe/40 bg-cream-warm p-3 transition-shadow hover:shadow-md"
+                  className="rounded-md border border-taupe/40 bg-cream-bright p-3 transition-shadow hover:shadow-paper"
                   style={{ borderLeft: `3px solid ${SIDE_ACCENT[r.side]}` }}
                 >
                   <div className="flex items-baseline justify-between">

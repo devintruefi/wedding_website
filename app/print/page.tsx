@@ -1,15 +1,9 @@
 import { fetchRooms } from "@/lib/data";
 import { FLOOR_LAYOUTS, BUILDING_ORDER } from "@/lib/layouts";
+import { SIDE_ACCENT } from "@/lib/sides";
 import type { Room } from "@/lib/types";
 
 export const revalidate = 60;
-
-const SIDE_ACCENT: Record<string, string> = {
-  Devin: "#3E5C76",
-  Poonam: "#A8527A",
-  Joint: "#C9A040",
-  TBD: "#8A8273",
-};
 
 export default async function PrintPage() {
   const rooms = await fetchRooms();
@@ -24,7 +18,7 @@ export default async function PrintPage() {
     <div className="bg-white text-forest-deep">
       <div className="mx-auto max-w-[11in] px-8 py-8">
         <header className="mb-6 border-b-2 border-copper pb-3 text-center">
-          <p className="font-sans text-[0.6rem] tracking-ultra-wide uppercase text-copper">
+          <p className="font-sans text-[0.6rem] tracking-mega-wide uppercase text-copper">
             ✦ Patel &amp; Patel · Room Chart
           </p>
           <h1 className="font-serif text-4xl font-light">

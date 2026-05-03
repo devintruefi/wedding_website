@@ -5,7 +5,7 @@ export function LoadingState() {
     <div className="mx-auto flex max-w-2xl flex-col items-center px-6 py-32 text-center">
       <Ornament className="text-copper mb-6" />
       <p className="font-serif italic text-2xl text-forest-deep">
-        ✦ Loading the floor plan…
+        Loading the floor plan…
       </p>
       <p className="mt-3 font-sans text-[0.7rem] tracking-ultra-wide uppercase text-slate-warm">
         Pulling live data from the master sheet

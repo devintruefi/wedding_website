@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Room } from "@/lib/types";
-import { FLOOR_LAYOUTS, BUILDING_ORDER, groupByBuilding } from "@/lib/layouts";
 import { Controls } from "./Controls";
 import { StatsBar } from "./StatsBar";
-import { Building } from "./Building";
+import { ResortMap } from "./ResortMap";
 import { RoomModal } from "./RoomModal";
+import { Legend } from "./Legend";
 
 export type FilterMode =
   | "all"
@@ -50,10 +50,11 @@ export function RoomChart({
   const [selected, setSelected] = useState<Room | null>(null);
   const [lastSyncedAt, setLastSyncedAt] = useState<number>(initialSyncedAt);
 
-  // Auto-refresh every 60s without page reload
+  // Auto-refresh — pauses when tab is hidden so we don't burn requests
   useEffect(() => {
     let cancelled = false;
     const tick = async () => {
+      if (typeof document !== "undefined" && document.hidden) return;
       try {
         const res = await fetch("/api/rooms", { cache: "no-store" });
         if (!res.ok) return;
@@ -67,9 +68,14 @@ export function RoomChart({
       }
     };
     const id = setInterval(tick, 60_000);
+    const onVisible = () => {
+      if (typeof document !== "undefined" && !document.hidden) tick();
+    };
+    document.addEventListener("visibilitychange", onVisible);
     return () => {
       cancelled = true;
       clearInterval(id);
+      document.removeEventListener("visibilitychange", onVisible);
     };
   }, []);
 
@@ -79,7 +85,7 @@ export function RoomChart({
     return m;
   }, [rooms]);
 
-  const { matchSet, dimSet, hasFilter } = useMemo(() => {
+  const { matchSet, dimSet, hasFilter, matchCount } = useMemo(() => {
     const q = search.trim().toLowerCase();
     const hasSearch = q.length > 0;
     const hasPill = filter !== "all";
@@ -87,7 +93,9 @@ export function RoomChart({
 
     const matchSet = new Set<string>();
     const dimSet = new Set<string>();
-    if (!hasFilter) return { matchSet, dimSet, hasFilter: false };
+    if (!hasFilter) {
+      return { matchSet, dimSet, hasFilter: false, matchCount: null as number | null };
+    }
 
     for (const r of rooms) {
       let isPillMatch = true;
@@ -106,10 +114,8 @@ export function RoomChart({
       if (isPillMatch && isSearchMatch) matchSet.add(r.room);
       else dimSet.add(r.room);
     }
-    return { matchSet, dimSet, hasFilter };
+    return { matchSet, dimSet, hasFilter, matchCount: matchSet.size };
   }, [rooms, search, filter]);
-
-  const buildings = useMemo(() => groupByBuilding(), []);
 
   return (
     <>
@@ -119,72 +125,24 @@ export function RoomChart({
         filter={filter}
         setFilter={setFilter}
         lastSyncedAt={lastSyncedAt}
+        matchCount={matchCount}
       />
 
       <StatsBar stats={stats} />
 
-      <main className="mx-auto max-w-6xl px-6 py-12 sm:py-16">
-        {BUILDING_ORDER.map((name) => (
-          <Building
-            key={name}
-            name={name}
-            floors={buildings.get(name) ?? []}
-            lookup={lookup}
-            matchSet={matchSet}
-            dimSet={dimSet}
-            hasFilter={hasFilter}
-            onRoomClick={(r) => setSelected(r)}
-          />
-        ))}
+      <main className="pb-16 sm:pb-24">
+        <ResortMap
+          lookup={lookup}
+          matchSet={matchSet}
+          dimSet={dimSet}
+          hasFilter={hasFilter}
+          onRoomClick={(r) => setSelected(r)}
+        />
 
-        {/* Legend */}
-        <section className="reveal mt-8 border-t border-taupe/40 pt-8">
-          <p className="text-center font-sans text-[0.6rem] tracking-ultra-wide uppercase text-copper mb-4">
-            ✦ Legend
-          </p>
-          <div className="mx-auto grid max-w-3xl grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-3 text-center">
-            <LegendSwatch color="#3E5C76" label="Devin's side" />
-            <LegendSwatch color="#A8527A" label="Poonam's side" />
-            <LegendSwatch color="#C9A040" label="Joint" />
-            <LegendSwatch color="#1F2A1C" label="Suite (dark green)" />
-            <LegendStripe label="Open / unassigned" />
-            <LegendFlag label="Flagged room" />
-          </div>
-        </section>
+        <Legend />
       </main>
 
       <RoomModal room={selected} onClose={() => setSelected(null)} />
     </>
-  );
-}
-
-function LegendSwatch({ color, label }: { color: string; label: string }) {
-  return (
-    <div className="flex items-center justify-center gap-2 font-sans text-[0.7rem] tracking-wide uppercase text-slate-warm">
-      <span
-        className="inline-block h-3 w-3 rounded-sm"
-        style={{ background: color }}
-        aria-hidden
-      />
-      {label}
-    </div>
-  );
-}
-
-function LegendStripe({ label }: { label: string }) {
-  return (
-    <div className="flex items-center justify-center gap-2 font-sans text-[0.7rem] tracking-wide uppercase text-slate-warm">
-      <span className="stripe-open inline-block h-3 w-5 rounded-sm border border-dashed border-copper" aria-hidden />
-      {label}
-    </div>
-  );
-}
-
-function LegendFlag({ label }: { label: string }) {
-  return (
-    <div className="flex items-center justify-center gap-2 font-sans text-[0.7rem] tracking-wide uppercase text-slate-warm">
-      <span className="inline-block h-3 w-1 bg-copper rounded-full" aria-hidden />
-      {label}
-    </div>
   );
 }

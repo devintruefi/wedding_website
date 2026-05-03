@@ -1,4 +1,4 @@
-import type { FloorLayout, FloorCell } from "./types";
+import type { FloorLayout, FloorCell, FloorRow } from "./types";
 
 const r = (room: string): FloorCell => ({ kind: "room", room });
 const stair = (): FloorCell => ({ kind: "stair", label: "Stair / Lift" });
@@ -7,55 +7,66 @@ const pool = (): FloorCell => ({ kind: "pool", label: "Pool / Terrace" });
 const blank = (): FloorCell => ({ kind: "blank" });
 const ps = (): FloorCell => ({ kind: "ps", label: "Penthouse Suite" });
 
-// Main Lodge — Floor 3 — Penthouse
-// North: 207 (couple) | 205 | 203 | BOH | 201
-// South: PS area      | 206 | 204 | BOH | 202
-const mainLodgeP3: FloorLayout = {
+// ---------- Per-lodge column widths ----------
+// Each lodge keeps a consistent column count across its floors so vertical
+// alignment is preserved (room directly above another room sits in the same
+// column). Floors with fewer rooms get padded with blanks.
+export const LODGE_COLS = {
+  east: 8,
+  main: 5,
+  west: 9,
+  cabin: 6,
+} as const;
+
+// Pad a floor row to a target column count by appending blanks on the right.
+function padRow(row: FloorRow, target: number): FloorRow {
+  if (row.cells.length >= target) return row;
+  const pad: FloorCell[] = Array.from(
+    { length: target - row.cells.length },
+    () => blank(),
+  );
+  return { ...row, cells: [...row.cells, ...pad] };
+}
+
+function padFloor(layout: FloorLayout, target: number): FloorLayout {
+  return {
+    ...layout,
+    rows: layout.rows.map((row) => padRow(row, target)),
+  };
+}
+
+// ---------- Main Lodge — Penthouse Floor (Floor 3) ----------
+const mainLodgeP3Raw: FloorLayout = {
   building: "Main Lodge",
   floor: "Floor 3 — Penthouse",
   label: "Main Lodge · Penthouse",
-  subtitle: "Floor 3 — The Couple's Floor",
+  subtitle: "The Couple's Floor",
   showCorridor: true,
   rows: [
-    {
-      side: "north",
-      cells: [r("207"), r("205"), r("203"), boh(), r("201")],
-    },
-    {
-      side: "south",
-      cells: [ps(), r("206"), r("204"), boh(), r("202")],
-    },
+    { side: "north", cells: [r("207"), r("205"), r("203"), boh(), r("201")] },
+    { side: "south", cells: [ps(), r("206"), r("204"), boh(), r("202")] },
   ],
 };
+const mainLodgeP3 = padFloor(mainLodgeP3Raw, LODGE_COLS.main);
 
-// East Floor 1 — Pool/Terrace on west half
-// North: pool | pool | 106 | 104 | 102
-// South: pool | pool | 105 | 103 | 101
-const east1: FloorLayout = {
+// ---------- Guest Lodge East ----------
+const east1Raw: FloorLayout = {
   building: "Guest Lodge East",
   floor: "Floor 1",
-  label: "Guest Lodge East · Floor 1",
+  label: "East · Floor 1",
   subtitle: "Pool & Terrace Level",
   showCorridor: true,
   rows: [
-    {
-      side: "north",
-      cells: [pool(), pool(), r("106"), r("104"), r("102")],
-    },
-    {
-      side: "south",
-      cells: [pool(), pool(), r("105"), r("103"), r("101")],
-    },
+    { side: "north", cells: [pool(), pool(), r("106"), r("104"), r("102")] },
+    { side: "south", cells: [pool(), pool(), r("105"), r("103"), r("101")] },
   ],
 };
+const east1 = padFloor(east1Raw, LODGE_COLS.east);
 
-// East Floor 2 — 117(suite), 116, 114, [stair], 112, 110, 108, 107(suite)
-//                -,         118, 115, [stair], 111, 109, -,   -
-// Adjusted to make symmetric 8 columns
-const east2: FloorLayout = {
+const east2Raw: FloorLayout = {
   building: "Guest Lodge East",
   floor: "Floor 2",
-  label: "Guest Lodge East · Floor 2",
+  label: "East · Floor 2",
   showCorridor: true,
   rows: [
     {
@@ -68,14 +79,12 @@ const east2: FloorLayout = {
     },
   ],
 };
+const east2 = padFloor(east2Raw, LODGE_COLS.east);
 
-// East Floor 3 — Friends Floor
-// 130(suite), 128, 126, [stair], 124, 122, 120, 119(suite)
-// -,          129, 127, [stair], 125, 123, 121, -
-const east3: FloorLayout = {
+const east3Raw: FloorLayout = {
   building: "Guest Lodge East",
   floor: "Floor 3 — Friends Floor",
-  label: "Guest Lodge East · Floor 3",
+  label: "East · Floor 3",
   subtitle: "Friends Floor",
   showCorridor: true,
   rows: [
@@ -89,14 +98,12 @@ const east3: FloorLayout = {
     },
   ],
 };
+const east3 = padFloor(east3Raw, LODGE_COLS.east);
 
-// East Floor 4 — Devin's Family Wing
-// 142(suite), 140, 138, [stair], 136, 134, 132, 131(suite)
-// -,          141, 139, [stair], 137, 135, 133, -
-const east4: FloorLayout = {
+const east4Raw: FloorLayout = {
   building: "Guest Lodge East",
   floor: "Floor 4 — Devin's Family Wing",
-  label: "Guest Lodge East · Floor 4",
+  label: "East · Floor 4",
   subtitle: "Devin's Family Wing",
   showCorridor: true,
   rows: [
@@ -110,14 +117,13 @@ const east4: FloorLayout = {
     },
   ],
 };
+const east4 = padFloor(east4Raw, LODGE_COLS.east);
 
-// West Floor 2
-// 312(suite), 310, 308, 306, [stair], 304, 302, -,   301(suite)
-// -,          311, 309, 307, [stair], 305, 303, -,   -
-const west2: FloorLayout = {
+// ---------- Guest Lodge West ----------
+const west2Raw: FloorLayout = {
   building: "Guest Lodge West",
   floor: "Floor 2",
-  label: "Guest Lodge West · Floor 2",
+  label: "West · Floor 2",
   showCorridor: true,
   rows: [
     {
@@ -150,14 +156,12 @@ const west2: FloorLayout = {
     },
   ],
 };
+const west2 = padFloor(west2Raw, LODGE_COLS.west);
 
-// West Floor 3
-// 324(suite), 322, 320, 318, [stair], 316, 314, -,   313(suite)
-// -,          323, 321, 319, [stair], 317, 315, -,   -
-const west3: FloorLayout = {
+const west3Raw: FloorLayout = {
   building: "Guest Lodge West",
   floor: "Floor 3",
-  label: "Guest Lodge West · Floor 3",
+  label: "West · Floor 3",
   showCorridor: true,
   rows: [
     {
@@ -190,9 +194,10 @@ const west3: FloorLayout = {
     },
   ],
 };
+const west3 = padFloor(west3Raw, LODGE_COLS.west);
 
-// Big Sky Cabins — single row
-const cabins: FloorLayout = {
+// ---------- Big Sky Cabins ----------
+const cabinsRaw: FloorLayout = {
   building: "Big Sky Cabins",
   floor: "Two-bed Cabins",
   label: "Big Sky Cabins",
@@ -205,7 +210,56 @@ const cabins: FloorLayout = {
     },
   ],
 };
+export const cabins = padFloor(cabinsRaw, LODGE_COLS.cabin);
 
+// ---------- Resort cross-section: stories from top to bottom ----------
+// East = left, Main = center, West = right. Slots sized by lodge column counts
+// so cells stay aligned vertically across floors of the same lodge.
+export interface ResortStory {
+  level: number;
+  label: string;
+  caption?: string;
+  east: FloorLayout | null;
+  main: FloorLayout | null;
+  west: FloorLayout | null;
+}
+
+export const RESORT_STORIES: ResortStory[] = [
+  {
+    level: 4,
+    label: "Level 4",
+    caption: "Devin's Family Wing",
+    east: east4,
+    main: null,
+    west: null,
+  },
+  {
+    level: 3,
+    label: "Level 3",
+    caption: "Penthouse · Friends Floor",
+    east: east3,
+    main: mainLodgeP3,
+    west: west3,
+  },
+  {
+    level: 2,
+    label: "Level 2",
+    caption: "Mid-lodge guest rooms",
+    east: east2,
+    main: null,
+    west: west2,
+  },
+  {
+    level: 1,
+    label: "Level 1",
+    caption: "Pool & Terrace",
+    east: east1,
+    main: null,
+    west: null,
+  },
+];
+
+// ---------- Existing exports preserved for /print and /by-group ----------
 export const FLOOR_LAYOUTS: FloorLayout[] = [
   mainLodgeP3,
   east1,
