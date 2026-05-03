@@ -5,6 +5,7 @@ import type { Room } from "@/lib/types";
 import { Controls } from "./Controls";
 import { StatsBar } from "./StatsBar";
 import { ResortMap } from "./ResortMap";
+import { Directory } from "./Directory";
 import { RoomModal } from "./RoomModal";
 import { Legend } from "./Legend";
 
@@ -132,6 +133,14 @@ export function RoomChart({
 
       <main className="pb-16 sm:pb-24">
         <ResortMap
+          lookup={lookup}
+          matchSet={matchSet}
+          dimSet={dimSet}
+          hasFilter={hasFilter}
+          onRoomClick={(r) => setSelected(r)}
+        />
+
+        <Directory
           lookup={lookup}
           matchSet={matchSet}
           dimSet={dimSet}

@@ -146,7 +146,13 @@ export function Hero() {
               href="#resort-map"
               className="rounded-full border border-copper/60 bg-copper/10 px-4 py-2 font-sans text-[0.65rem] tracking-ultra-wide uppercase text-copper-soft hover:border-copper-soft hover:bg-copper/20 transition-colors"
             >
-              View resort map ↓
+              Resort map ↓
+            </a>
+            <a
+              href="#directory"
+              className="rounded-full border border-cream-warm/30 bg-cream-warm/[0.06] px-4 py-2 font-sans text-[0.65rem] tracking-ultra-wide uppercase text-cream-warm/85 hover:bg-cream-warm/[0.12] hover:border-cream-warm/50 transition-colors"
+            >
+              Guest directory ↓
             </a>
             <a
               href={SHEET_URL}

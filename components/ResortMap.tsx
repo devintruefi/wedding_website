@@ -147,8 +147,14 @@ export function ResortMap({
       </div>
 
       {/* Tiny helper hint */}
-      <p className="mt-4 text-center font-sans text-[0.6rem] tracking-wide uppercase text-slate-warm/70">
-        Tap any room for guest details · Sticky filters above keep their place as you scroll
+      <p className="mt-4 text-center font-sans text-[0.65rem] tracking-wide uppercase text-slate-warm/70">
+        Tap any room for full details ·{" "}
+        <a
+          href="#directory"
+          className="text-copper hover:text-copper-soft underline underline-offset-2 transition-colors"
+        >
+          jump to guest directory ↓
+        </a>
       </p>
     </section>
   );
