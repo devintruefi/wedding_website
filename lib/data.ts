@@ -37,6 +37,15 @@ function isSuiteType(t: string): boolean {
   return s.includes("suite") || s.includes("cabin");
 }
 
+// Friendlier display label without having to touch the master sheet:
+// "Mom's Old & Boring" → "Mom's Older Gen". Case-insensitive match on the
+// "Old & Boring" fragment so any future sheet edits to the prefix still flow
+// through. If the label is later renamed in the sheet, this is a no-op.
+function normalizeGroup(g: string): string {
+  const t = (g || "").trim();
+  return t.replace(/Old\s*(&|and)\s*Boring/gi, "Older Gen");
+}
+
 function toRoom(r: RawRow): Room {
   const room = (r.Room || "").trim();
   return {
@@ -46,7 +55,7 @@ function toRoom(r: RawRow): Room {
     type: (r.Type || "").trim(),
     guest: (r.Guest || "").trim(),
     side: normalizeSide(r.Side),
-    group: (r.Group || "").trim(),
+    group: normalizeGroup(r.Group),
     notes: (r.Notes || "").trim(),
     flag: (r.Flag || "").trim().toUpperCase() === "FLAG",
     isOpen: isOpenGuest(r.Guest || ""),
