@@ -19,7 +19,7 @@ export default async function PrintPage() {
       <div className="mx-auto max-w-[11in] px-8 py-8">
         <header className="mb-6 border-b-2 border-copper pb-3 text-center">
           <p className="font-sans text-[0.6rem] tracking-mega-wide uppercase text-copper">
-            ✦ Patel &amp; Patel · Room Chart
+            ✦ Poonam &amp; Devin · Room Chart
           </p>
           <h1 className="font-serif text-4xl font-light">
             One &amp; Only Moonlight Basin
@@ -97,7 +97,7 @@ export default async function PrintPage() {
         })}
 
         <footer className="mt-6 border-t border-taupe pt-3 text-center text-[0.6rem] tracking-wide uppercase text-slate-warm">
-          Patel &amp; Patel · Big Sky · June 2026 · Live data from master sheet
+          Poonam &amp; Devin · Big Sky · June 2026 · Live data from master sheet
         </footer>
       </div>
     </div>

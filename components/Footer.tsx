@@ -12,7 +12,7 @@ export function Footer() {
           To the mountains, to a beginning, to forever.
         </p>
         <p className="mt-6 font-sans text-[0.6rem] sm:text-[0.65rem] tracking-mega-wide uppercase text-cream-warm/60">
-          Patel &amp; Patel · Big Sky · June 2026
+          Poonam &amp; Devin · Big Sky · June 2026
         </p>
 
         <div className="mt-7 flex flex-wrap items-center justify-center gap-2 sm:gap-3">

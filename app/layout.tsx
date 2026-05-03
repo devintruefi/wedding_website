@@ -18,11 +18,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Patel & Patel · Room Chart",
+  title: "Poonam & Devin · Room Chart",
   description:
-    "Room chart for the Patel & Patel wedding · One&Only Moonlight Basin · Big Sky, Montana · June 25–28, 2026",
+    "Room chart for the Poonam & Devin wedding · One&Only Moonlight Basin · Big Sky, Montana · June 25–28, 2026",
   openGraph: {
-    title: "Patel & Patel · Room Chart",
+    title: "Poonam & Devin · Room Chart",
     description:
       "One&Only Moonlight Basin · Big Sky, Montana · June 25–28, 2026",
     type: "website",

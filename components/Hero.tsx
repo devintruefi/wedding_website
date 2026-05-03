@@ -117,9 +117,9 @@ export function Hero() {
           </p>
           <Ornament className="mx-auto my-5 sm:my-6 text-copper-soft" />
           <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl font-light leading-[1.05] text-cream-warm">
-            <span className="italic font-light">Patel</span>{" "}
+            <span className="italic font-light">Poonam</span>{" "}
             <span className="text-copper-soft">&amp;</span>{" "}
-            <span className="italic font-light">Patel</span>
+            <span className="italic font-light">Devin</span>
           </h1>
           <p className="mt-7 font-serif italic text-lg sm:text-2xl text-cream-warm/85">
             A celebration in the Montana mountains
@@ -174,7 +174,7 @@ function UtilityBar() {
     <div className="no-print relative z-10 border-b border-cream-warm/10 bg-forest-deep/40 backdrop-blur-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 sm:px-6 py-2.5">
         <span className="font-sans text-[0.55rem] sm:text-[0.6rem] tracking-mega-wide uppercase text-cream-warm/70">
-          Patel · Patel · Room Chart
+          Poonam · Devin · Room Chart
         </span>
         <div className="flex items-center gap-2 sm:gap-3">
           <a

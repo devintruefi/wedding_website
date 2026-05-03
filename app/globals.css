@@ -145,21 +145,7 @@ html {
   border-radius: 4px;
 }
 
-/* ------ Room cell typography defaults — kept tight for fluid mobile ------ */
-.room-tile {
-  /* container query support for adaptive label visibility */
-  container-type: inline-size;
-}
-
-@container (max-width: 70px) {
-  .room-tile .room-guest,
-  .room-tile .room-type,
-  .room-tile .room-suite-tag {
-    display: none;
-  }
-}
-@container (max-width: 110px) {
-  .room-tile .room-type {
-    display: none;
-  }
-}
+/* ------ Room cell typography ------ */
+/* Names are always visible (compacted via compactGuest in lib/format.ts).
+   The cells use line-clamp-2 plus a min-height so the cross-section keeps
+   a consistent vertical rhythm across floors. */

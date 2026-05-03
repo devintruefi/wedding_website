@@ -2,6 +2,7 @@
 
 import type { Room } from "@/lib/types";
 import { SIDE_ACCENT } from "@/lib/sides";
+import { compactGuest } from "@/lib/format";
 
 interface RoomProps {
   room: Room | undefined;
@@ -21,13 +22,13 @@ export function RoomCell({
   if (!room) {
     return (
       <div
-        className="room-tile flex aspect-[5/4] flex-col justify-center rounded-md border border-dashed border-taupe/60 bg-cream/40 px-1.5 py-1.5 sm:px-2 sm:py-2"
+        className="room-tile flex min-h-[60px] sm:min-h-[68px] flex-col justify-between rounded-md border border-dashed border-taupe/60 bg-cream/40 px-1.5 py-1.5"
         title={`Room ${roomNumber} — not in sheet`}
       >
-        <span className="font-serif text-base sm:text-lg leading-none text-slate-warm/60">
+        <span className="font-serif text-sm leading-none text-slate-warm/60">
           {roomNumber}
         </span>
-        <span className="room-type mt-1 font-sans text-[0.5rem] tracking-ultra-wide text-slate-warm/60 uppercase">
+        <span className="font-sans text-[0.5rem] tracking-ultra-wide text-slate-warm/60 uppercase truncate">
           Missing
         </span>
       </div>
@@ -36,26 +37,25 @@ export function RoomCell({
 
   const accent = SIDE_ACCENT[room.side] ?? "#8A8273";
   const { isCouple, isOpen, isSuite, flag } = room;
+  const compact = compactGuest(room.guest);
 
   const baseClasses =
-    "room-tile group relative flex aspect-[5/4] flex-col justify-between overflow-hidden rounded-md border px-1.5 py-1.5 sm:px-2 sm:py-2 text-left transition-all duration-300 cursor-pointer";
+    "room-tile group relative flex min-h-[60px] sm:min-h-[68px] md:min-h-[72px] flex-col justify-between overflow-hidden rounded-md border pl-2 pr-1.5 py-1.5 text-left transition-all duration-300 cursor-pointer";
 
-  // Suite styling — dark forest, copper accents
   const suiteClasses = isSuite
     ? "bg-forest text-cream-warm border-copper/70 hover:border-copper-soft hover:shadow-copper"
-    : "bg-cream-bright text-forest-deep border-taupe/50 hover:border-copper hover:shadow-paper";
+    : "bg-cream-bright text-forest-deep border-taupe/55 hover:border-copper hover:shadow-paper";
 
   const coupleClasses = isCouple
     ? "ring-1 ring-copper ring-offset-2 ring-offset-cream-warm shadow-copper"
     : "";
 
-  // Open / unassigned — dashed copper border, diagonal stripes
   const openClasses = isOpen
     ? "stripe-open border-dashed border-copper text-slate-warm"
     : "";
 
   const matchClasses = matched
-    ? "ring-2 ring-copper shadow-[0_0_0_4px_rgba(185,140,63,0.18)] scale-[1.03] z-10"
+    ? "ring-2 ring-copper shadow-[0_0_0_4px_rgba(185,140,63,0.18)] -translate-y-0.5 z-10"
     : "";
   const dimClasses = dimmed ? "opacity-25" : "opacity-100";
 
@@ -81,39 +81,32 @@ export function RoomCell({
         />
       )}
 
-      <div className="flex items-baseline justify-between gap-1 pl-1">
+      {/* Top row: room number + suite tag */}
+      <div className="flex items-baseline justify-between gap-1 leading-none">
         <span
           className={`font-serif leading-none ${
             isSuite
-              ? "text-base sm:text-lg md:text-xl text-copper-soft"
-              : "text-sm sm:text-base md:text-lg"
+              ? "text-sm sm:text-base text-copper-soft"
+              : "text-sm sm:text-base"
           } ${isCouple ? "text-copper-soft" : ""}`}
         >
           {room.room}
         </span>
         {isSuite && (
-          <span className="room-suite-tag font-sans text-[0.45rem] sm:text-[0.5rem] tracking-ultra-wide uppercase text-copper-soft/90">
+          <span className="font-sans text-[0.45rem] sm:text-[0.5rem] tracking-ultra-wide uppercase text-copper-soft/85">
             {isCouple ? "Couple" : "Suite"}
           </span>
         )}
       </div>
 
-      <div className="pl-1 min-w-0">
-        <p
-          className={`room-guest font-serif text-[0.7rem] sm:text-[0.8rem] md:text-[0.9rem] leading-tight line-clamp-2 ${
-            isSuite ? "text-cream-warm/95" : "text-forest-deep"
-          } ${isOpen ? "italic text-slate-warm" : ""}`}
-        >
-          {room.guest || "—"}
-        </p>
-        <p
-          className={`room-type mt-0.5 font-sans text-[0.5rem] sm:text-[0.55rem] tracking-wide uppercase truncate ${
-            isSuite ? "text-cream-warm/55" : "text-slate-warm"
-          }`}
-        >
-          {room.type}
-        </p>
-      </div>
+      {/* Guest name — always visible, compacted to fit */}
+      <p
+        className={`room-guest mt-1 font-serif leading-[1.1] line-clamp-2 break-words text-[0.62rem] sm:text-[0.68rem] md:text-[0.72rem] ${
+          isSuite ? "text-cream-warm/95" : "text-forest-deep"
+        } ${isOpen ? "italic text-slate-warm" : ""}`}
+      >
+        {compact}
+      </p>
     </button>
   );
 }
@@ -133,7 +126,6 @@ export function StructuralCell({
     ps: "bg-forest/90 border-copper/60 text-copper-soft",
   };
 
-  // Compact icon for narrow widths
   const icon: Record<string, string> = {
     stair: "≡",
     elevator: "≡",
@@ -144,14 +136,14 @@ export function StructuralCell({
 
   return (
     <div
-      className={`structural-cell flex aspect-[5/4] flex-col items-center justify-center rounded-md border px-1 py-1 text-center ${styles[kind]}`}
+      className={`structural-cell flex min-h-[60px] sm:min-h-[68px] md:min-h-[72px] flex-col items-center justify-center rounded-md border px-1 py-1 text-center ${styles[kind]}`}
       aria-hidden
       title={label}
     >
       <span className="font-serif text-base sm:text-lg leading-none opacity-80">
         {icon[kind]}
       </span>
-      <span className="structural-label mt-0.5 hidden sm:block font-sans text-[0.5rem] tracking-ultra-wide uppercase opacity-90 truncate w-full">
+      <span className="mt-0.5 hidden sm:block font-sans text-[0.5rem] tracking-ultra-wide uppercase opacity-90 truncate w-full">
         {label}
       </span>
     </div>
@@ -159,5 +151,5 @@ export function StructuralCell({
 }
 
 export function BlankCell() {
-  return <div className="aspect-[5/4]" aria-hidden />;
+  return <div className="min-h-[60px] sm:min-h-[68px] md:min-h-[72px]" aria-hidden />;
 }
