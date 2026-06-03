@@ -219,7 +219,7 @@ function StoryRow({
       {/* Stack lodges full-width until xl — below that, 3 lodges side-by-side
           crush the 8-/9-wide buildings into unreadable cells. Full-width stacking
           gives each room a comfortable size; xl+ restores the cross-section. */}
-      <div className="grid grid-cols-1 gap-3 sm:gap-4 xl:gap-4 xl:[grid-template-columns:8fr_5fr_9fr]">
+      <div className="grid grid-cols-1 gap-3 sm:gap-4 xl:gap-4 xl:[grid-template-columns:8fr_5fr_8fr]">
         {children}
       </div>
     </div>
