@@ -44,9 +44,9 @@ export function ResortMap({
         {/* Mountain ridge top edge */}
         <RidgeTop />
 
-        {/* Lodge headers — visible on md+ above the cross-section */}
+        {/* Lodge headers — visible only when the 3-across cross-section is shown (xl+) */}
         <div
-          className="hidden md:grid gap-3 sm:gap-4 mt-2 mb-3"
+          className="hidden xl:grid gap-3 sm:gap-4 mt-2 mb-3"
           style={{ gridTemplateColumns: STORY_GRID_TEMPLATE }}
         >
           <LodgeColumnHeader title="Guest Lodge East" caption="West façade" />
@@ -148,7 +148,8 @@ export function ResortMap({
 
       {/* Tiny helper hint */}
       <p className="mt-4 text-center font-sans text-[0.65rem] tracking-wide uppercase text-slate-warm/70">
-        Tap any room for full details ·{" "}
+        <span className="hidden md:inline">Hover a room for names · tap for full details · </span>
+        <span className="md:hidden">Tap any room for full details · </span>
         <a
           href="#directory"
           className="text-copper hover:text-copper-soft underline underline-offset-2 transition-colors"
@@ -196,7 +197,10 @@ function StoryRow({
         <span className="hidden sm:inline-block h-px flex-1 max-w-[60%] bg-gradient-to-r from-transparent via-taupe/40 to-transparent" />
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:gap-4 md:gap-3 lg:gap-4 md:[grid-template-columns:8fr_5fr_9fr]">
+      {/* Stack lodges full-width until xl — below that, 3 lodges side-by-side
+          crush the 8-/9-wide buildings into unreadable cells. Full-width stacking
+          gives each room a comfortable size; xl+ restores the cross-section. */}
+      <div className="grid grid-cols-1 gap-3 sm:gap-4 xl:gap-4 xl:[grid-template-columns:8fr_5fr_9fr]">
         {children}
       </div>
     </div>

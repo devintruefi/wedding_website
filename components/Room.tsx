@@ -1,8 +1,8 @@
 "use client";
 
 import type { Room } from "@/lib/types";
-import { SIDE_ACCENT } from "@/lib/sides";
-import { compactGuest } from "@/lib/format";
+import { SIDE_ACCENT, SIDE_LABEL } from "@/lib/sides";
+import { mapLabel } from "@/lib/format";
 
 interface RoomProps {
   room: Room | undefined;
@@ -37,12 +37,12 @@ export function RoomCell({
 
   const accent = SIDE_ACCENT[room.side] ?? "#8A8273";
   const { isCouple, isOpen, isSuite, flag } = room;
-  const compact = compactGuest(room.guest);
+  const label = mapLabel(room.guest);
 
-  const baseClasses =
-    "room-tile group relative flex min-h-[60px] sm:min-h-[68px] md:min-h-[72px] flex-col justify-between overflow-hidden rounded-md border pl-2 pr-1.5 py-1.5 text-left transition-all duration-300 cursor-pointer";
+  const dimClasses = dimmed ? "opacity-25" : "opacity-100";
+  const matchWrap = matched ? "-translate-y-0.5 z-20" : "";
 
-  const suiteClasses = isSuite
+  const tileClasses = isSuite
     ? "bg-forest text-cream-warm border-copper/70 hover:border-copper-soft hover:shadow-copper"
     : "bg-cream-bright text-forest-deep border-taupe/55 hover:border-copper hover:shadow-paper";
 
@@ -55,59 +55,108 @@ export function RoomCell({
     : "";
 
   const matchClasses = matched
-    ? "ring-2 ring-copper shadow-[0_0_0_4px_rgba(185,140,63,0.18)] -translate-y-0.5 z-10"
+    ? "ring-2 ring-copper shadow-[0_0_0_4px_rgba(185,140,63,0.18)]"
     : "";
-  const dimClasses = dimmed ? "opacity-25" : "opacity-100";
 
   return (
-    <button
-      onClick={() => onClick(room)}
-      className={`${baseClasses} ${suiteClasses} ${coupleClasses} ${openClasses} ${matchClasses} ${dimClasses} hover:-translate-y-0.5`}
-      aria-label={`Room ${room.room} — ${room.guest || "open"}`}
-      title={`${room.room} · ${room.guest || "Open"}`}
+    <div
+      className={`group/cell relative min-h-[60px] sm:min-h-[68px] md:min-h-[72px] transition-all duration-300 ${dimClasses} ${matchWrap}`}
     >
-      {/* Side accent strip */}
-      <span
-        className="absolute left-0 top-0 h-full w-[3px] transition-all duration-300 group-hover:w-[5px]"
-        style={{ background: accent }}
-        aria-hidden
-      />
-
-      {/* Flag accent */}
-      {flag && (
+      <button
+        onClick={() => onClick(room)}
+        className={`room-tile relative flex h-full w-full flex-col justify-between overflow-hidden rounded-md border pl-2.5 pr-1.5 py-1.5 text-left transition-all duration-300 cursor-pointer hover:-translate-y-0.5 ${tileClasses} ${coupleClasses} ${openClasses} ${matchClasses}`}
+        aria-label={`Room ${room.room} — ${room.guest || "open"}${room.side !== "TBD" ? `, ${SIDE_LABEL[room.side] ?? room.side}` : ""}`}
+        title={`${room.room} · ${room.guest || "Open"}`}
+      >
+        {/* Side accent strip — the primary "who's side" signal */}
         <span
-          className="absolute right-0 top-0 h-full w-[3px] bg-copper"
+          className="absolute left-0 top-0 h-full w-[4px] transition-all duration-300 group-hover/cell:w-[6px]"
+          style={{ background: accent }}
           aria-hidden
         />
-      )}
 
-      {/* Top row: room number + suite tag */}
-      <div className="flex items-baseline justify-between gap-1 leading-none">
-        <span
-          className={`font-serif leading-none ${
-            isSuite
-              ? "text-sm sm:text-base text-copper-soft"
-              : "text-sm sm:text-base"
-          } ${isCouple ? "text-copper-soft" : ""}`}
-        >
-          {room.room}
-        </span>
-        {isSuite && (
-          <span className="font-sans text-[0.45rem] sm:text-[0.5rem] tracking-ultra-wide uppercase text-copper-soft/85">
-            {isCouple ? "Couple" : "Suite"}
-          </span>
+        {/* Flag accent */}
+        {flag && (
+          <span
+            className="absolute right-0 top-0 h-full w-[3px] bg-copper"
+            aria-hidden
+          />
         )}
-      </div>
 
-      {/* Guest name — always visible, compacted to fit */}
-      <p
-        className={`room-guest mt-1 font-serif leading-[1.1] line-clamp-2 break-words text-[0.62rem] sm:text-[0.68rem] md:text-[0.72rem] ${
-          isSuite ? "text-cream-warm/95" : "text-forest-deep"
-        } ${isOpen ? "italic text-slate-warm" : ""}`}
-      >
-        {compact}
+        {/* Top row: prominent room number + suite/couple tag */}
+        <div className="flex items-baseline justify-between gap-1 leading-none">
+          <span
+            className={`font-serif font-medium leading-none text-[0.95rem] sm:text-lg ${
+              isSuite || isCouple ? "text-copper-soft" : "text-forest-deep"
+            }`}
+          >
+            {room.room}
+          </span>
+          {(isSuite || isCouple) && (
+            <span className="font-sans text-[0.45rem] sm:text-[0.5rem] tracking-ultra-wide uppercase text-copper-soft/90">
+              {isCouple ? "Couple" : "Suite"}
+            </span>
+          )}
+        </div>
+
+        {/* Lead first name + occupant count — wraps to a 2nd line rather than
+            clipping to a single letter when a lodge is shown narrow */}
+        <p
+          className={`mt-1 line-clamp-2 break-words font-serif leading-[1.12] text-[0.74rem] sm:text-[0.82rem] ${
+            isSuite ? "text-cream-warm/95" : "text-forest-deep"
+          } ${isOpen ? "italic text-slate-warm" : ""}`}
+        >
+          {label.name}
+          {label.extra > 0 && (
+            <span
+              className={`ml-1 font-sans text-[0.58rem] tracking-tight ${
+                isSuite ? "text-copper-soft/90" : "text-slate-warm/80"
+              }`}
+              aria-hidden
+            >
+              +{label.extra}
+            </span>
+          )}
+        </p>
+      </button>
+
+      {/* Hover detail card — desktop only; mobile uses tap → modal */}
+      <RoomTooltip room={room} accent={accent} />
+    </div>
+  );
+}
+
+function RoomTooltip({ room, accent }: { room: Room; accent: string }) {
+  const sideLabel = SIDE_LABEL[room.side] ?? room.side;
+  return (
+    <div
+      role="tooltip"
+      aria-hidden
+      className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 hidden w-48 -translate-x-1/2 translate-y-1 rounded-lg border border-taupe/50 bg-cream-bright px-3 py-2.5 text-left opacity-0 shadow-paper-lg transition-all duration-200 ease-out md:group-hover/cell:block md:group-hover/cell:translate-y-0 md:group-hover/cell:opacity-100"
+    >
+      <p className="font-sans text-[0.55rem] tracking-ultra-wide uppercase text-copper">
+        Room {room.room} · {room.building}
       </p>
-    </button>
+      <p className="mt-1 font-serif text-sm leading-snug text-forest-deep">
+        {room.guest || "Open"}
+      </p>
+      <p className="mt-1.5 flex items-center gap-1.5 font-sans text-[0.6rem] tracking-wide text-slate-warm">
+        <span
+          className="inline-block h-2 w-2 shrink-0 rounded-full"
+          style={{ background: accent }}
+          aria-hidden
+        />
+        <span className="truncate">
+          {sideLabel}
+          {room.group ? ` · ${room.group}` : ""}
+        </span>
+      </p>
+      {/* downward arrow */}
+      <span
+        className="absolute left-1/2 top-full -mt-1 h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r border-taupe/50 bg-cream-bright"
+        aria-hidden
+      />
+    </div>
   );
 }
 

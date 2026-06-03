@@ -28,7 +28,7 @@ export function Lodge({
   return (
     <div className="lodge-frame px-1.5 py-1.5 sm:px-2 sm:py-2 reveal">
       {miniLabel && (
-        <p className="md:hidden mb-1.5 text-center font-sans text-[0.55rem] tracking-ultra-wide uppercase text-copper-deep/80">
+        <p className="xl:hidden mb-1.5 text-center font-sans text-[0.6rem] tracking-ultra-wide uppercase text-copper-deep/80">
           {miniLabel}
         </p>
       )}
@@ -87,7 +87,7 @@ export function EmptyLodgeSlot({ cols }: { cols: number }) {
   // for floors where this lodge doesn't exist (e.g. Main only on level 3).
   return (
     <div
-      className="lodge-frame is-empty hidden md:flex items-center justify-center min-h-[60px]"
+      className="lodge-frame is-empty hidden xl:flex items-center justify-center min-h-[60px]"
       aria-hidden
     >
       <span className="font-sans text-[0.55rem] tracking-ultra-wide uppercase text-slate-warm/40">

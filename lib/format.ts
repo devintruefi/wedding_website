@@ -1,53 +1,49 @@
+export interface MapLabel {
+  /** First name of the lead occupant — the scannable token for a floor-plan cell. */
+  name: string;
+  /** How many additional occupants share the room (for a subtle "+N"). */
+  extra: number;
+  /** True when the room is open / unassigned. */
+  isOpen: boolean;
+}
+
 /**
- * Render a guest name in a tight, scannable form for the resort map cells —
- * where horizontal space is the binding constraint. The full name continues
- * to render in the Guest Directory below the map and in the room modal.
+ * Floor-plan label for a resort-map cell: just the lead occupant's first name
+ * plus a count of any others. Cells are too narrow for full names — the full
+ * roster lives in the hover tooltip, the modal, and the Guest Directory.
  *
- *   "Maya + Sunil"                    → "Maya + Sunil"
- *   "Mehak Verma + Guest"             → "Mehak + Guest"
- *   "Mitch + Lisa Soloman"            → "Mitch + Lisa"
- *   "Sanat + Priti + Saloni Patel"    → "Sanat +2"
- *   "Tushar + Urvashi + Amani + Karina" → "Tushar +3"
- *   "Felicia + Harvin + Newborn"      → "Felicia +2"
- *   "Nanny (Stellan)"                 → "Nanny"
- *   "(Open — buffer)"                 → "Open"
- *   "Ba + Dada (on hold)"             → "Ba + Dada"
- *   ""                                → "—"
+ *   "Maya + Sunil"                 → { name: "Maya",  extra: 1 }
+ *   "Priya Shah"                   → { name: "Priya", extra: 0 }
+ *   "Sanat + Priti + Saloni Patel" → { name: "Sanat", extra: 2 }
+ *   "Nanny (Stellan)"              → { name: "Nanny", extra: 0 }
+ *   "(Open — buffer)"              → { name: "Open",  extra: 0, isOpen: true }
+ *   ""                             → { name: "—",     extra: 0 }
  */
-export function compactGuest(guest: string): string {
-  if (!guest) return "—";
+export function mapLabel(guest: string): MapLabel {
+  if (!guest) return { name: "—", extra: 0, isOpen: false };
   const trimmed = guest.trim();
   const lower = trimmed.toLowerCase();
 
-  if (lower.includes("(open") || lower.includes("open —") || lower.startsWith("open")) {
-    return "Open";
+  if (
+    lower.includes("(open") ||
+    lower.includes("open —") ||
+    lower.startsWith("open") ||
+    lower.includes("buffer")
+  ) {
+    return { name: "Open", extra: 0, isOpen: true };
   }
 
-  // Strip parenthetical asides like "(on hold)" or "(Stellan)"
-  const noParen = trimmed.replace(/\s*\([^)]*\)\s*/g, " ").replace(/\s+/g, " ").trim();
+  const noParen = trimmed
+    .replace(/\s*\([^)]*\)\s*/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
   const base = noParen || trimmed;
 
-  // Split on "+" with optional whitespace
   const parts = base
     .split(/\s*\+\s*/)
     .map((p) => p.trim())
     .filter(Boolean);
 
-  if (parts.length <= 1) {
-    // Single name — return as-is, the cell's CSS will line-clamp if needed
-    return base;
-  }
-
-  if (parts.length === 2) {
-    const joined = parts.join(" + ");
-    if (joined.length <= 18) return joined;
-    // Drop everything after the first word in each part
-    const firstA = parts[0].split(/\s+/)[0];
-    const firstB = parts[1].split(/\s+/)[0];
-    return `${firstA} + ${firstB}`;
-  }
-
-  // 3 or more — first person's first name, then "+N" where N is the rest
-  const firstFirstName = parts[0].split(/\s+/)[0];
-  return `${firstFirstName} +${parts.length - 1}`;
+  const firstName = (parts[0] || base).split(/\s+/)[0];
+  return { name: firstName, extra: Math.max(0, parts.length - 1), isOpen: false };
 }

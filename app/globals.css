@@ -207,6 +207,7 @@ html {
 }
 
 /* ------ Room cell typography ------ */
-/* Names are always visible (compacted via compactGuest in lib/format.ts).
-   The cells use line-clamp-2 plus a min-height so the cross-section keeps
-   a consistent vertical rhythm across floors. */
+/* Resort-map cells read as a floor plan: a prominent room number, a side-color
+   strip, and the lead occupant's first name (via mapLabel in lib/format.ts).
+   Full names surface in the hover tooltip, the modal, and the Guest Directory.
+   A shared min-height keeps a consistent vertical rhythm across floors. */
