@@ -6,12 +6,23 @@ const SHEET_URL =
 export function Footer() {
   return (
     <footer className="relative bg-forest-deep text-cream-warm/80 print:hidden">
-      <div className="mx-auto max-w-4xl px-6 py-16 text-center">
-        <Ornament className="mx-auto text-copper-soft mb-6" />
-        <p className="font-serif italic text-xl sm:text-2xl text-cream-warm">
+      <div className="mx-auto max-w-4xl px-6 py-20 text-center">
+        {/* Monogram seal */}
+        <div
+          className="monogram-ring mx-auto mb-8 flex h-16 w-16 items-center justify-center rounded-full bg-forest-deep/40"
+          aria-hidden
+        >
+          <span className="font-serif text-xl leading-none text-copper-soft">
+            <span className="italic">P</span>
+            <span className="mx-0.5 align-middle text-sm text-copper">&amp;</span>
+            <span className="italic">D</span>
+          </span>
+        </div>
+        <p className="font-serif italic text-xl sm:text-3xl text-cream-warm leading-snug">
           To the mountains, to a beginning, to forever.
         </p>
-        <p className="mt-6 font-sans text-[0.6rem] sm:text-[0.65rem] tracking-mega-wide uppercase text-cream-warm/60">
+        <Ornament className="mx-auto my-7 text-copper-soft" />
+        <p className="font-sans text-[0.6rem] sm:text-[0.65rem] tracking-mega-wide uppercase text-cream-warm/60">
           Poonam &amp; Devin · Big Sky · June 2026
         </p>
 

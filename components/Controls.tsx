@@ -81,10 +81,10 @@ export function Controls({
               <button
                 key={f.id}
                 onClick={() => setFilter(f.id)}
-                className={`whitespace-nowrap rounded-full border px-3 py-1.5 font-sans text-[0.65rem] sm:text-[0.7rem] tracking-wide uppercase transition-all ${
+                className={`whitespace-nowrap rounded-full border px-3.5 py-1.5 font-sans text-[0.65rem] sm:text-[0.7rem] tracking-wide uppercase transition-all duration-200 ${
                   filter === f.id
                     ? "border-forest-deep bg-forest-deep text-cream-warm shadow-sm"
-                    : "border-taupe/60 bg-cream-bright text-slate-warm hover:border-forest-deep/60 hover:text-forest-deep"
+                    : "border-taupe/60 bg-cream-bright text-slate-warm hover:-translate-y-px hover:border-forest-deep/60 hover:text-forest-deep hover:shadow-sm"
                 }`}
               >
                 {f.label}
@@ -98,7 +98,7 @@ export function Controls({
           <div className="font-sans text-[0.6rem] tracking-wide uppercase text-slate-warm/80 truncate">
             {hasActive && matchCount !== null ? (
               <span>
-                <span className="text-forest-deep font-medium">{matchCount}</span>{" "}
+                <span className="tnum text-forest-deep font-medium">{matchCount}</span>{" "}
                 {matchCount === 1 ? "match" : "matches"}
                 {filter !== "all" || search ? (
                   <button

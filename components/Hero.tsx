@@ -110,22 +110,37 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-forest-deep" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-24 sm:pt-24 sm:pb-32">
-        <div className="reveal text-center">
-          <p className="font-sans text-[0.65rem] sm:text-[0.7rem] tracking-mega-wide text-copper-soft uppercase">
+      <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-24 sm:pt-20 sm:pb-32">
+        <div className="reveal-stagger flex flex-col items-center text-center">
+          {/* Monogram seal */}
+          <div
+            className="monogram-ring flex h-20 w-20 sm:h-24 sm:w-24 items-center justify-center rounded-full bg-forest-deep/40"
+            aria-hidden
+          >
+            <span className="font-serif text-2xl sm:text-3xl leading-none tracking-tight text-copper-soft">
+              <span className="italic">P</span>
+              <span className="mx-0.5 align-middle text-base sm:text-lg text-copper">&amp;</span>
+              <span className="italic">D</span>
+            </span>
+          </div>
+
+          <p className="mt-7 font-sans text-[0.62rem] sm:text-[0.7rem] tracking-mega-wide text-copper-soft uppercase">
             One &amp; Only · Moonlight Basin
           </p>
-          <Ornament className="mx-auto my-5 sm:my-6 text-copper-soft" />
-          <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl font-light leading-[1.05] text-cream-warm">
-            <span className="italic font-light">Poonam</span>{" "}
-            <span className="text-copper-soft">&amp;</span>{" "}
-            <span className="italic font-light">Devin</span>
+
+          <h1 className="mt-5 font-serif text-[3.25rem] leading-[1.02] sm:text-7xl md:text-[7.5rem] font-light text-cream-warm">
+            <span className="block italic font-light sm:inline">Poonam</span>{" "}
+            <span className="gold-text not-italic font-normal">&amp;</span>{" "}
+            <span className="block italic font-light sm:inline">Devin</span>
           </h1>
-          <p className="mt-7 font-serif italic text-lg sm:text-2xl text-cream-warm/85">
+
+          <p className="mt-6 font-serif italic text-lg sm:text-2xl text-cream-warm/85">
             A celebration in the Montana mountains
           </p>
-          <Ornament className="mx-auto my-7 text-copper-soft" />
-          <div className="font-sans text-[0.7rem] sm:text-sm tracking-ultra-wide text-cream-warm/75 uppercase flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+
+          <Ornament className="mx-auto my-7 sm:my-8 text-copper-soft" />
+
+          <div className="font-sans text-sm sm:text-base tracking-ultra-wide text-cream-warm uppercase flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
             <span>June 25</span>
             <span className="text-copper-soft" aria-hidden>·</span>
             <span>26</span>
@@ -133,36 +148,51 @@ export function Hero() {
             <span>27</span>
             <span className="text-copper-soft" aria-hidden>·</span>
             <span>28</span>
-            <span className="text-copper-soft" aria-hidden>·</span>
-            <span>2026</span>
+            <span className="mx-1 text-copper-soft" aria-hidden>—</span>
+            <span className="text-copper-soft">2026</span>
           </div>
-          <p className="mt-3 font-sans text-[0.6rem] sm:text-[0.7rem] tracking-mega-wide text-cream-warm/60 uppercase">
+          <p className="mt-3 font-sans text-[0.6rem] sm:text-[0.7rem] tracking-mega-wide text-cream-warm/55 uppercase">
             Big Sky · Montana
           </p>
 
           {/* Quick anchor links */}
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
             <a
               href="#resort-map"
-              className="rounded-full border border-copper/60 bg-copper/10 px-4 py-2 font-sans text-[0.65rem] tracking-ultra-wide uppercase text-copper-soft hover:border-copper-soft hover:bg-copper/20 transition-colors"
+              className="group inline-flex items-center gap-2 rounded-full border border-copper/60 bg-copper/10 px-5 py-2.5 font-sans text-[0.65rem] tracking-ultra-wide uppercase text-copper-soft transition-all duration-300 hover:border-copper-soft hover:bg-copper/20 hover:shadow-copper"
             >
-              Resort map ↓
+              Resort map
+              <span className="transition-transform duration-300 group-hover:translate-y-0.5" aria-hidden>↓</span>
             </a>
             <a
               href="#directory"
-              className="rounded-full border border-cream-warm/30 bg-cream-warm/[0.06] px-4 py-2 font-sans text-[0.65rem] tracking-ultra-wide uppercase text-cream-warm/85 hover:bg-cream-warm/[0.12] hover:border-cream-warm/50 transition-colors"
+              className="group inline-flex items-center gap-2 rounded-full border border-cream-warm/30 bg-cream-warm/[0.06] px-5 py-2.5 font-sans text-[0.65rem] tracking-ultra-wide uppercase text-cream-warm/85 transition-all duration-300 hover:bg-cream-warm/[0.12] hover:border-cream-warm/50"
             >
-              Guest directory ↓
+              Guest directory
+              <span className="transition-transform duration-300 group-hover:translate-y-0.5" aria-hidden>↓</span>
             </a>
             <a
               href={SHEET_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-cream-warm/30 bg-cream-warm/[0.06] px-4 py-2 font-sans text-[0.65rem] tracking-ultra-wide uppercase text-cream-warm/85 hover:bg-cream-warm/[0.12] hover:border-cream-warm/50 transition-colors"
+              className="group inline-flex items-center gap-2 rounded-full border border-cream-warm/30 bg-cream-warm/[0.06] px-5 py-2.5 font-sans text-[0.65rem] tracking-ultra-wide uppercase text-cream-warm/85 transition-all duration-300 hover:bg-cream-warm/[0.12] hover:border-cream-warm/50"
             >
-              Open spreadsheet ↗
+              Open spreadsheet
+              <span className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden>↗</span>
             </a>
           </div>
+
+          {/* Scroll cue */}
+          <a
+            href="#resort-map"
+            className="no-print mt-12 hidden sm:flex flex-col items-center gap-2 text-cream-warm/45 transition-colors hover:text-copper-soft"
+            aria-label="Scroll to the resort map"
+          >
+            <span className="font-sans text-[0.55rem] tracking-mega-wide uppercase">Explore</span>
+            <svg className="scroll-cue" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+              <path d="M12 5v14M5 12l7 7 7-7" />
+            </svg>
+          </a>
         </div>
       </div>
     </section>

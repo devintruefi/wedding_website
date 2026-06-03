@@ -5,7 +5,7 @@ export function Legend() {
     <section className="mx-auto mt-12 sm:mt-16 max-w-5xl px-6 reveal">
       <div className="border-t border-taupe/40 pt-8">
         <p className="text-center font-sans text-[0.6rem] tracking-mega-wide uppercase text-copper mb-5">
-          ✦ Legend
+          Legend
         </p>
         <div className="mx-auto grid max-w-3xl grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-4 text-center">
           <Item color={SIDE_ACCENT.Devin} label="Devin's side" />

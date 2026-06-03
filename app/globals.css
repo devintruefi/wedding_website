@@ -122,6 +122,67 @@ html {
   100% { opacity: 1; transform: translateY(0); }
 }
 
+/* Staggered reveal — applied to children for an editorial cascade */
+.reveal-stagger > * {
+  animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.reveal-stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.reveal-stagger > *:nth-child(2) { animation-delay: 0.16s; }
+.reveal-stagger > *:nth-child(3) { animation-delay: 0.27s; }
+.reveal-stagger > *:nth-child(4) { animation-delay: 0.38s; }
+.reveal-stagger > *:nth-child(5) { animation-delay: 0.49s; }
+.reveal-stagger > *:nth-child(6) { animation-delay: 0.60s; }
+.reveal-stagger > *:nth-child(7) { animation-delay: 0.71s; }
+
+/* ------ Elegant gold gradient text (use sparingly, on accents) ------ */
+.gold-text {
+  background: linear-gradient(100deg, #8C6726 0%, #D2A85C 42%, #F0D9A8 52%, #D2A85C 62%, #8C6726 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ------ Hairline divider with a centered gold node ------ */
+.hairline {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(185, 140, 63, 0.5) 50%,
+    transparent
+  );
+}
+
+/* ------ Monogram seal ring (Hero) ------ */
+.monogram-ring {
+  box-shadow:
+    0 0 0 1px rgba(210, 168, 92, 0.55),
+    0 0 0 6px rgba(210, 168, 92, 0.10),
+    0 18px 50px -24px rgba(0, 0, 0, 0.7);
+}
+
+/* ------ Tabular figures for stats — prevents width jitter ------ */
+.tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+
+/* ------ Soft scroll-cue bounce ------ */
+@keyframes scrollCue {
+  0%, 100% { transform: translateY(0); opacity: 0.55; }
+  50% { transform: translateY(5px); opacity: 1; }
+}
+.scroll-cue { animation: scrollCue 2.2s ease-in-out infinite; }
+
+/* ------ Respect reduced-motion: kill all decorative motion ------ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ------ Soft scrollbar ------ */
 .floor-scroll::-webkit-scrollbar { height: 6px; }
 .floor-scroll::-webkit-scrollbar-thumb {
