@@ -1,8 +1,14 @@
 import Papa from "papaparse";
 import type { Room, Side } from "./types";
 
+// Live source of truth: the editable master sheet's CSV export. Reading
+// /export?format=csv (rather than Google's "Publish to web" snapshot, which
+// must be manually re-published and had drifted 13 rooms + 128 fields out of
+// date) means edits to the master sheet appear on the site within the
+// revalidate window — no re-publish step. Requires the sheet to stay
+// link-viewable ("Anyone with the link can view").
 export const CSV_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vTX-iQl3OJbbC6EcspKPfsvqV7syVLJMwvLr8o_l5fnLoxnTbP2K7onQuB7O2v77PhPjZ88BF7b9HKx/pub?gid=980928746&single=true&output=csv";
+  "https://docs.google.com/spreadsheets/d/1Rknh0gDuxgEW6KfbTH0T-_AORABgRE9lrqnLAbj34Tk/export?format=csv";
 
 interface RawRow {
   Building: string;

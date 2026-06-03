@@ -127,6 +127,7 @@ export function RoomChart({
         setFilter={setFilter}
         lastSyncedAt={lastSyncedAt}
         matchCount={matchCount}
+        totalRooms={stats.total}
       />
 
       <StatsBar stats={stats} />

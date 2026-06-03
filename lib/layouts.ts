@@ -16,6 +16,8 @@ export const LODGE_COLS = {
   main: 5,
   west: 9,
   cabin: 6,
+  meadow: 7,
+  alpine: 6,
 } as const;
 
 // Pad a floor row to a target column count by appending blanks on the right.
@@ -212,6 +214,38 @@ const cabinsRaw: FloorLayout = {
 };
 export const cabins = padFloor(cabinsRaw, LODGE_COLS.cabin);
 
+// ---------- Meadow Cabins ----------
+const meadowRaw: FloorLayout = {
+  building: "Meadow Cabins",
+  floor: "Meadow",
+  label: "Meadow Cabins",
+  subtitle: "Standalone Cabins",
+  showCorridor: false,
+  rows: [
+    {
+      side: "north",
+      cells: [r("410"), r("411"), r("412"), r("413"), r("414"), r("415"), r("416")],
+    },
+  ],
+};
+export const meadow = padFloor(meadowRaw, LODGE_COLS.meadow);
+
+// ---------- Alpine Cabins ----------
+const alpineRaw: FloorLayout = {
+  building: "Alpine Cabins",
+  floor: "Alpine",
+  label: "Alpine Cabins",
+  subtitle: "Standalone Cabins",
+  showCorridor: false,
+  rows: [
+    {
+      side: "north",
+      cells: [r("400"), r("401"), r("402"), r("403"), r("404"), r("405")],
+    },
+  ],
+};
+export const alpine = padFloor(alpineRaw, LODGE_COLS.alpine);
+
 // ---------- Resort cross-section: stories from top to bottom ----------
 // East = left, Main = center, West = right. Slots sized by lodge column counts
 // so cells stay aligned vertically across floors of the same lodge.
@@ -269,6 +303,8 @@ export const FLOOR_LAYOUTS: FloorLayout[] = [
   west2,
   west3,
   cabins,
+  meadow,
+  alpine,
 ];
 
 export const BUILDING_ORDER = [
@@ -276,6 +312,8 @@ export const BUILDING_ORDER = [
   "Guest Lodge East",
   "Guest Lodge West",
   "Big Sky Cabins",
+  "Meadow Cabins",
+  "Alpine Cabins",
 ];
 
 export function groupByBuilding(): Map<string, FloorLayout[]> {

@@ -9,6 +9,7 @@ interface ControlsProps {
   setFilter: (f: FilterMode) => void;
   lastSyncedAt: number | null;
   matchCount: number | null;
+  totalRooms: number;
 }
 
 const FILTERS: { id: FilterMode; label: string }[] = [
@@ -33,6 +34,7 @@ export function Controls({
   setFilter,
   lastSyncedAt,
   matchCount,
+  totalRooms,
 }: ControlsProps) {
   const hasActive = search.trim().length > 0 || filter !== "all";
   return (
@@ -113,7 +115,7 @@ export function Controls({
                 ) : null}
               </span>
             ) : (
-              <span>79 rooms · 4 buildings · 8 floors</span>
+              <span><span className="tnum">{totalRooms}</span> rooms · 6 buildings</span>
             )}
           </div>
           <div className="flex items-center gap-2 font-sans text-[0.6rem] tracking-wide uppercase text-slate-warm/70">

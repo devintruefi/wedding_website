@@ -1,8 +1,17 @@
 "use client";
 
-import type { Room } from "@/lib/types";
-import { RESORT_STORIES, LODGE_COLS, cabins } from "@/lib/layouts";
+import type { Room, FloorLayout } from "@/lib/types";
+import { RESORT_STORIES, LODGE_COLS, cabins, meadow, alpine } from "@/lib/layouts";
 import { Lodge, EmptyLodgeSlot } from "./Lodge";
+
+// A cabin cluster only renders once at least one of its rooms exists in the
+// live sheet — so newly-defined clusters stay hidden until their data lands
+// rather than showing a row of "Missing" tiles.
+function hasAnyRoom(layout: FloorLayout, lookup: Map<string, Room>): boolean {
+  return layout.rows.some((row) =>
+    row.cells.some((c) => c.kind === "room" && !!c.room && lookup.has(c.room)),
+  );
+}
 
 interface ResortMapProps {
   lookup: Map<string, Room>;
@@ -13,6 +22,12 @@ interface ResortMapProps {
 }
 
 const STORY_GRID_TEMPLATE = `${LODGE_COLS.east}fr ${LODGE_COLS.main}fr ${LODGE_COLS.west}fr`;
+
+const CABIN_CLUSTERS = [
+  { layout: cabins, cols: LODGE_COLS.cabin, title: "Big Sky Cabins", caption: "Two-bed standalone cabins · 420–425" },
+  { layout: meadow, cols: LODGE_COLS.meadow, title: "Meadow Cabins", caption: "Standalone cabins · 410–416" },
+  { layout: alpine, cols: LODGE_COLS.alpine, title: "Alpine Cabins", caption: "Standalone cabins · 400–405" },
+] as const;
 
 export function ResortMap({
   lookup,
@@ -34,7 +49,7 @@ export function ResortMap({
           One &amp; Only Moonlight Basin
         </h2>
         <p className="mt-3 font-serif italic text-base sm:text-lg text-slate-warm/90">
-          A top-down view across all four buildings
+          A top-down view across the resort
         </p>
         <CompassStrip />
       </header>
@@ -124,25 +139,29 @@ export function ResortMap({
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-taupe/60 to-transparent" />
         </div>
 
-        {/* Cabins row */}
-        <div className="mx-auto max-w-3xl">
-          <div className="mb-2 flex items-baseline justify-between px-2">
-            <h3 className="font-serif text-lg sm:text-xl text-forest-deep">
-              Big Sky Cabins
-            </h3>
-            <span className="font-sans text-[0.55rem] tracking-ultra-wide uppercase text-slate-warm/80">
-              Two-bed standalone cabins · 420–425
-            </span>
-          </div>
-          <Lodge
-            layout={cabins}
-            cols={LODGE_COLS.cabin}
-            lookup={lookup}
-            matchSet={matchSet}
-            dimSet={dimSet}
-            hasFilter={hasFilter}
-            onRoomClick={onRoomClick}
-          />
+        {/* Cabin clusters — each shown only when its rooms exist in the sheet */}
+        <div className="space-y-7 sm:space-y-9">
+          {CABIN_CLUSTERS.filter((c) => hasAnyRoom(c.layout, lookup)).map((c) => (
+            <div key={c.title} className="mx-auto max-w-3xl">
+              <div className="mb-2 flex items-baseline justify-between px-2">
+                <h3 className="font-serif text-lg sm:text-xl text-forest-deep">
+                  {c.title}
+                </h3>
+                <span className="font-sans text-[0.55rem] tracking-ultra-wide uppercase text-slate-warm/80">
+                  {c.caption}
+                </span>
+              </div>
+              <Lodge
+                layout={c.layout}
+                cols={c.cols}
+                lookup={lookup}
+                matchSet={matchSet}
+                dimSet={dimSet}
+                hasFilter={hasFilter}
+                onRoomClick={onRoomClick}
+              />
+            </div>
+          ))}
         </div>
       </div>
 

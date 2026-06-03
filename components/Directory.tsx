@@ -24,6 +24,8 @@ const DIRECTORY_ORDER = [
   "West · Floor 3",
   "West · Floor 2",
   "Big Sky Cabins",
+  "Meadow Cabins",
+  "Alpine Cabins",
 ];
 
 function orderedFloors(): FloorLayout[] {
@@ -53,7 +55,12 @@ export function Directory({
   hasFilter,
   onRoomClick,
 }: DirectoryProps) {
-  const floors = orderedFloors();
+  // Pair each floor with its present rooms, and drop floors that have no rooms
+  // in the sheet yet (e.g. a cabin cluster defined in layouts before its data
+  // is entered) so we never render an all-"Missing" section.
+  const floors = orderedFloors()
+    .map((floor) => ({ floor, rooms: roomsInFloor(floor, lookup) }))
+    .filter(({ rooms }) => rooms.length > 0);
 
   return (
     <section
@@ -74,11 +81,11 @@ export function Directory({
       </header>
 
       <div className="space-y-12 sm:space-y-14">
-        {floors.map((floor) => (
+        {floors.map(({ floor, rooms }) => (
           <DirectoryFloor
             key={floor.label}
             floor={floor}
-            rooms={roomsInFloor(floor, lookup)}
+            rooms={rooms}
             lookup={lookup}
             matchSet={matchSet}
             dimSet={dimSet}
